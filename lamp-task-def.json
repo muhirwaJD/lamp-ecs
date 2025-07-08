@@ -1,0 +1,59 @@
+{
+  "family": "lampTask",
+  "networkMode": "bridge",
+  "containerDefinitions": [
+    {
+      "name": "lamp-app",
+      "image": "149536452878.dkr.ecr.eu-west-1.amazonaws.com/lamp-app:latest",
+      "essential": true,
+      "memory": 256,
+      "cpu": 128,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 0,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DB_NAME",
+          "value": "testdb"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "test-db.c7c22480exdf.eu-west-1.rds.amazonaws.com"
+        },
+        {
+          "name": "DB_USER",
+          "value": "admin"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "Muhirwa.!"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/lampTask",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost/index.php || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 15
+      }
+    }
+  ],
+  "cpu": "256",
+  "memory": "512"
+}
+
