@@ -30,7 +30,7 @@ REPLICA_LAG=$(aws cloudwatch get-metric-statistics \
     --namespace AWS/RDS \
     --metric-name ReplicaLag \
     --dimensions Name=DBInstanceIdentifier,Value=$DB_IDENTIFIER \
-    --start-time $(date -u -d '5 minutes ago' +%Y-%m-%dT%H:%M:%S) \
+    --start-time $(date -u -v -5M +%Y-%m-%dT%H:%M:%S) \
     --end-time $(date -u +%Y-%m-%dT%H:%M:%S) \
     --period 300 \
     --statistics Average \

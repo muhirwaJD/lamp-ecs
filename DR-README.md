@@ -17,6 +17,24 @@ This repository implements a comprehensive disaster recovery (DR) solution for a
 - **S3**: Cross-region replicated bucket
 - **VPC**: Complete network infrastructure mirror
 
+## 🟢 Current DR Infrastructure Status
+
+✅ **DR Infrastructure Successfully Deployed and Active**
+
+- **Primary Database**: `test-db` (eu-west-1)
+- **DR Read Replica**: `lamp-app-dr-read-replica` (us-east-1)
+- **DR Application URL**: http://lamp-app-dr-alb-1284648996.us-east-1.elb.amazonaws.com/
+- **ECS Service**: 2 tasks running and healthy
+- **Database Replication**: Active cross-region read replica
+- **Last Verified**: July 15, 2025
+
+### Quick Verification
+```bash
+# Test DR endpoint
+curl http://lamp-app-dr-alb-1284648996.us-east-1.elb.amazonaws.com/index.php
+# Expected: ✅ Hello from PHP Docker + ECS + RDS!
+```
+
 ## 📁 Repository Structure
 
 ```
