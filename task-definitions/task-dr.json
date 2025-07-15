@@ -1,0 +1,60 @@
+{
+  "family": "lampTask-dr",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::149536452878:role/lamp-app-dr-ecs-execution-role",
+  "taskRoleArn": "arn:aws:iam::149536452878:role/lamp-app-dr-ecs-task-role",
+  "containerDefinitions": [
+    {
+      "name": "lamp-app",
+      "image": "149536452878.dkr.ecr.eu-west-1.amazonaws.com/lamp-app:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DB_NAME",
+          "value": "testdb"
+        },
+        {
+          "name": "DB_USER",
+          "value": "admin"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:ssm:us-east-1:149536452878:parameter/lamp-app/dr/db/password"
+        },
+        {
+          "name": "DB_HOST",
+          "valueFrom": "arn:aws:ssm:us-east-1:149536452878:parameter/lamp-app/dr/db/host"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/lamp-app-dr-task",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost/index.php || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 15
+      }
+    }
+  ]
+}
